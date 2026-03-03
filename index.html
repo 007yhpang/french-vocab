@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法语单词本 · Mon Vocabulaire</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --ink: #1a1a2e;
+    --cream: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a0;
+    --rouge: #c0392b;
+    --vert: #27ae60;
+    --bleu: #2980b9;
+    --shadow: rgba(26,26,46,0.12);
+    --card-bg: #fffef9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    color: var(--ink);
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(41,128,185,0.06) 0%, transparent 50%);
+  }
+
+  header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+
+  header h1 span { color: var(--gold); font-style: italic; }
+
+  .subtitle {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #888;
+    margin-top: 0.3rem;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 0.9rem 1rem;
+    font-size: 0.8rem;
+    background: rgba(255,255,255,0.6);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    flex-wrap: wrap;
+  }
+
+  .stat { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
+  .stat-num { font-size: 1.3rem; font-weight: 700; font-family: 'Playfair Display', serif; }
+  .stat-num.green { color: var(--vert); }
+  .stat-num.rouge { color: var(--rouge); }
+  .stat-num.gold { color: var(--gold); }
+  .stat-num.bleu { color: var(--bleu); }
+  .stat-label { color: #888; letter-spacing: 0.05em; font-size: 0.72rem; }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 0.8rem 1.5rem 0;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .progress-track {
+    height: 6px;
+    background: rgba(201,168,76,0.2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), #e8c56a);
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: #aaa;
+    margin-top: 0.3rem;
+  }
+
+  /* MAIN CARD */
+  .card-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .word-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px var(--shadow), 0 1px 0 rgba(255,255,255,0.8) inset;
+    padding: 2.5rem 2rem;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    border: 1px solid rgba(201,168,76,0.15);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .word-card.flip-out {
+    transform: translateY(-12px) scale(0.97);
+    opacity: 0;
+  }
+
+  .word-card.flip-in {
+    animation: flipIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes flipIn {
+    from { transform: translateY(20px) scale(0.95); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  .word-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.9rem;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+
+  .category-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .french-word {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 7vw, 3.5rem);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+
+  .phonetic {
+    font-size: 1rem;
+    color: #999;
+    margin-bottom: 0.8rem;
+    font-style: italic;
+    letter-spacing: 0.04em;
+  }
+
+  .word-type {
+    display: inline-block;
+    background: rgba(41,128,185,0.1);
+    color: var(--bleu);
+    font-size: 0.68rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 99px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .attempt-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.1);
+    transition: background 0.3s ease;
+  }
+  .dot.correct { background: var(--vert); }
+  .dot.wrong { background: var(--rouge); }
+
+  /* OPTIONS */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    max-width: 520px;
+    width: 100%;
+  }
+
+  .option-btn {
+    background: #fff;
+    border: 1.5px solid rgba(201,168,76,0.25);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    color: var(--ink);
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .option-btn .opt-label {
+    background: rgba(201,168,76,0.15);
+    color: var(--gold);
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(201,168,76,0.18);
+  }
+
+  .option-btn.correct {
+    background: rgba(39,174,96,0.08);
+    border-color: var(--vert);
+    color: var(--vert);
+  }
+  .option-btn.correct .opt-label { background: var(--vert); color: #fff; }
+
+  .option-btn.wrong {
+    background: rgba(192,57,43,0.06);
+    border-color: var(--rouge);
+    color: var(--rouge);
+  }
+  .option-btn.wrong .opt-label { background: var(--rouge); color: #fff; }
+
+  .option-btn:disabled { cursor: not-allowed; }
+
+  /* DONT KNOW */
+  .dont-know-btn {
+    background: transparent;
+    border: 1.5px dashed rgba(0,0,0,0.15);
+    border-radius: 12px;
+    padding: 0.6rem 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: #aaa;
+    cursor: pointer;
+    transition: all 0.18s;
+    margin-top: 0.5rem;
+  }
+  .dont-know-btn:hover { border-color: var(--rouge); color: var(--rouge); }
+  .dont-know-btn:disabled { pointer-events: none; opacity: 0.4; }
+
+  /* FEEDBACK */
+  .feedback-strip {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.6rem 1.5rem;
+    border-radius: 10px;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .feedback-strip.show { opacity: 1; }
+  .feedback-strip.ok { background: rgba(39,174,96,0.1); color: var(--vert); }
+  .feedback-strip.fail { background: rgba(192,57,43,0.08); color: var(--rouge); }
+
+  /* NEXT BUTTON */
+  .next-btn {
+    background: var(--gold);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 2.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+    box-shadow: 0 4px 16px rgba(201,168,76,0.35);
+  }
+  .next-btn:hover { background: #b8933d; transform: translateY(-1px); }
+  .next-btn.visible { display: inline-block; }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: flex; flex-direction: column; align-items: center; padding: 3rem 1.5rem; }
+
+  .done-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+  .done-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  .done-sub { color: #888; text-align: center; margin-bottom: 2rem; line-height: 1.6; }
+
+  .learned-list {
+    max-width: 520px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid rgba(201,168,76,0.2);
+    overflow: hidden;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .learned-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.7rem 1.2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-size: 0.85rem;
+  }
+  .learned-item:last-child { border-bottom: none; }
+  .learned-fr { font-family: 'Playfair Display', serif; font-weight: 700; }
+  .learned-zh { color: #888; }
+
+  .restart-btn {
+    margin-top: 1.5rem;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .restart-btn:hover { background: #2c2c4a; }
+
+  /* Daily complete screen */
+  .daily-complete {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 480px;
+    border: 1px solid rgba(201,168,76,0.2);
+    box-shadow: 0 8px 40px var(--shadow);
+  }
+
+  .score-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), #e8c56a);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
+    box-shadow: 0 6px 20px rgba(201,168,76,0.35);
+    color: #fff;
+  }
+  .score-pct { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; }
+  .score-lbl { font-size: 0.62rem; letter-spacing: 0.1em; opacity: 0.85; }
+
+  /* scrollbar */
+  .learned-list::-webkit-scrollbar { width: 5px; }
+  .learned-list::-webkit-scrollbar-track { background: transparent; }
+  .learned-list::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 99px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Mon <span>Vocabulaire</span></h1>
+  <p class="subtitle">法语单词每日练习</p>
+</header>
+
+<div class="stats-bar">
+  <div class="stat"><span class="stat-num gold" id="stat-today">0</span><span class="stat-label">今日单词</span></div>
+  <div class="stat"><span class="stat-num green" id="stat-correct">0</span><span class="stat-label">答对</span></div>
+  <div class="stat"><span class="stat-num rouge" id="stat-wrong">0</span><span class="stat-label">答错</span></div>
+  <div class="stat"><span class="stat-num bleu" id="stat-learned">0</span><span class="stat-label">已掌握</span></div>
+  <div class="stat"><span class="stat-num" id="stat-total">0</span><span class="stat-label">词库总数</span></div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="progress-text"><span id="prog-label">今日进度</span><span id="prog-pct">0%</span></div>
+</div>
+
+<!-- MAIN QUIZ SCREEN -->
+<div id="quiz-screen" class="card-zone">
+  <div class="word-card" id="word-card">
+    <div class="word-badge" id="attempt-badge">第 1 次</div>
+    <div class="category-tag" id="cat-tag">类别</div>
+    <div class="french-word" id="fr-word">bonjour</div>
+    <div class="phonetic" id="ph-word">[bɔ̃ʒuʁ]</div>
+    <div class="word-type" id="type-tag">interjection</div>
+    <div class="attempt-dots" id="attempt-dots"></div>
+  </div>
+
+  <div class="feedback-strip" id="feedback"></div>
+
+  <div class="options-grid" id="options-grid"></div>
+
+  <button class="dont-know-btn" id="dont-know-btn" onclick="handleDontKnow()">🤷 不认识</button>
+  <button class="next-btn" id="next-btn" onclick="nextWord()">下一个 →</button>
+</div>
+
+<!-- DAILY DONE SCREEN -->
+<div id="done-screen" class="screen">
+  <div class="daily-complete">
+    <div class="done-icon">🎉</div>
+    <h2 class="done-title">今日完成！</h2>
+    <p class="done-sub">你今天学习了 <strong id="done-today"></strong> 个单词<br>答对率：<strong id="done-rate"></strong></p>
+    <div class="score-circle">
+      <div class="score-pct" id="done-pct">—</div>
+      <div class="score-lbl">正确率</div>
+    </div>
+    <p style="color:#aaa;font-size:0.8rem;margin-bottom:1.5rem;">已掌握单词 <strong id="done-learned" style="color:var(--bleu)"></strong> / <strong id="done-total"></strong></p>
+
+    <h3 style="font-family:'Playfair Display',serif;margin-bottom:0.8rem;font-size:1.1rem;">今日已掌握的单词</h3>
+    <div class="learned-list" id="today-learned-list"></div>
+    <button class="restart-btn" onclick="startNewDay()">明天继续学习 →</button>
+  </div>
+</div>
+
+<!-- ALL DONE SCREEN -->
+<div id="alldone-screen" class="screen">
+  <div class="done-icon">🏆</div>
+  <h2 class="done-title">词库全部掌握！</h2>
+  <p class="done-sub">恭喜你！你已经掌握了所有 <strong id="all-total"></strong> 个法语单词。<br>法语学习之旅从这里出发！</p>
+  <div class="learned-list" id="all-learned-list" style="max-width:520px;width:100%;"></div>
+  <button class="restart-btn" style="margin-top:1.5rem;" onclick="resetAll()">重新开始 🔄</button>
+</div>
+
+<script>
+// =========================================================
+// WORD DATABASE  (《你好法语》A1-A2 核心词汇 + 高频日用词)
+// =========================================================
+const ALL_WORDS = [
+  // 问候 & 礼貌
+  {fr:"bonjour",ph:"[bɔ̃ʒuʁ]",zh:"你好（日间）",type:"interj.",cat:"问候"},
+  {fr:"bonsoir",ph:"[bɔ̃swaʁ]",zh:"晚上好",type:"interj.",cat:"问候"},
+  {fr:"bonne nuit",ph:"[bɔn nɥi]",zh:"晚安",type:"interj.",cat:"问候"},
+  {fr:"au revoir",ph:"[o ʁəvwaʁ]",zh:"再见",type:"interj.",cat:"问候"},
+  {fr:"salut",ph:"[saly]",zh:"嗨 / 拜拜（非正式）",type:"interj.",cat:"问候"},
+  {fr:"merci",ph:"[mɛʁsi]",zh:"谢谢",type:"interj.",cat:"问候"},
+  {fr:"s'il vous plaît",ph:"[sil vu plɛ]",zh:"请（正式）",type:"loc.",cat:"问候"},
+  {fr:"s'il te plaît",ph:"[sil tə plɛ]",zh:"请（非正式）",type:"loc.",cat:"问候"},
+  {fr:"pardon",ph:"[paʁdɔ̃]",zh:"对不起 / 打扰了",type:"interj.",cat:"问候"},
+  {fr:"excusez-moi",ph:"[ɛkskyze mwa]",zh:"打扰一下",type:"loc.",cat:"问候"},
+  {fr:"de rien",ph:"[də ʁjɛ̃]",zh:"不客气",type:"loc.",cat:"问候"},
+  {fr:"je vous en prie",ph:"[ʒə vuz‿ɑ̃ pʁi]",zh:"不客气（正式）",type:"loc.",cat:"问候"},
+
+  // 数字
+  {fr:"un",ph:"[œ̃]",zh:"一",type:"num.",cat:"数字"},
+  {fr:"deux",ph:"[dø]",zh:"二",type:"num.",cat:"数字"},
+  {fr:"trois",ph:"[tʁwa]",zh:"三",type:"num.",cat:"数字"},
+  {fr:"quatre",ph:"[katʁ]",zh:"四",type:"num.",cat:"数字"},
+  {fr:"cinq",ph:"[sɛ̃k]",zh:"五",type:"num.",cat:"数字"},
+  {fr:"six",ph:"[sis]",zh:"六",type:"num.",cat:"数字"},
+  {fr:"sept",ph:"[sɛt]",zh:"七",type:"num.",cat:"数字"},
+  {fr:"huit",ph:"[ɥit]",zh:"八",type:"num.",cat:"数字"},
+  {fr:"neuf",ph:"[nœf]",zh:"九",type:"num.",cat:"数字"},
+  {fr:"dix",ph:"[dis]",zh:"十",type:"num.",cat:"数字"},
+  {fr:"vingt",ph:"[vɛ̃]",zh:"二十",type:"num.",cat:"数字"},
+  {fr:"cent",ph:"[sɑ̃]",zh:"一百",type:"num.",cat:"数字"},
+
+  // 颜色
+  {fr:"rouge",ph:"[ʁuʒ]",zh:"红色",type:"adj.",cat:"颜色"},
+  {fr:"bleu",ph:"[blø]",zh:"蓝色",type:"adj.",cat:"颜色"},
+  {fr:"vert",ph:"[vɛʁ]",zh:"绿色",type:"adj.",cat:"颜色"},
+  {fr:"jaune",ph:"[ʒon]",zh:"黄色",type:"adj.",cat:"颜色"},
+  {fr:"blanc",ph:"[blɑ̃]",zh:"白色",type:"adj.",cat:"颜色"},
+  {fr:"noir",ph:"[nwaʁ]",zh:"黑色",type:"adj.",cat:"颜色"},
+  {fr:"gris",ph:"[gʁi]",zh:"灰色",type:"adj.",cat:"颜色"},
+  {fr:"rose",ph:"[ʁoz]",zh:"粉色",type:"adj.",cat:"颜色"},
+  {fr:"orange",ph:"[ɔʁɑ̃ʒ]",zh:"橙色",type:"adj.",cat:"颜色"},
+  {fr:"violet",ph:"[vjɔlɛ]",zh:"紫色",type:"adj.",cat:"颜色"},
+
+  // 家庭
+  {fr:"la famille",ph:"[la famij]",zh:"家庭",type:"n.f.",cat:"家庭"},
+  {fr:"le père",ph:"[lə pɛʁ]",zh:"父亲",type:"n.m.",cat:"家庭"},
+  {fr:"la mère",ph:"[la mɛʁ]",zh:"母亲",type:"n.f.",cat:"家庭"},
+  {fr:"le frère",ph:"[lə fʁɛʁ]",zh:"兄弟",type:"n.m.",cat:"家庭"},
+  {fr:"la sœur",ph:"[la sœʁ]",zh:"姐妹",type:"n.f.",cat:"家庭"},
+  {fr:"le fils",ph:"[lə fis]",zh:"儿子",type:"n.m.",cat:"家庭"},
+  {fr:"la fille",ph:"[la fij]",zh:"女儿",type:"n.f.",cat:"家庭"},
+  {fr:"le mari",ph:"[lə maʁi]",zh:"丈夫",type:"n.m.",cat:"家庭"},
+  {fr:"la femme",ph:"[la fam]",zh:"妻子 / 女人",type:"n.f.",cat:"家庭"},
+  {fr:"le grand-père",ph:"[lə gʁɑ̃pɛʁ]",zh:"祖父",type:"n.m.",cat:"家庭"},
+  {fr:"la grand-mère",ph:"[la gʁɑ̃mɛʁ]",zh:"祖母",type:"n.f.",cat:"家庭"},
+
+  // 时间
+  {fr:"aujourd'hui",ph:"[oʒuʁdɥi]",zh:"今天",type:"adv.",cat:"时间"},
+  {fr:"demain",ph:"[dəmɛ̃]",zh:"明天",type:"adv.",cat:"时间"},
+  {fr:"hier",ph:"[jɛʁ]",zh:"昨天",type:"adv.",cat:"时间"},
+  {fr:"maintenant",ph:"[mɛ̃tnɑ̃]",zh:"现在",type:"adv.",cat:"时间"},
+  {fr:"toujours",ph:"[tuʒuʁ]",zh:"总是 / 始终",type:"adv.",cat:"时间"},
+  {fr:"souvent",ph:"[suvɑ̃]",zh:"经常",type:"adv.",cat:"时间"},
+  {fr:"parfois",ph:"[paʁfwa]",zh:"有时",type:"adv.",cat:"时间"},
+  {fr:"jamais",ph:"[ʒamɛ]",zh:"从不",type:"adv.",cat:"时间"},
+  {fr:"le matin",ph:"[lə matɛ̃]",zh:"早上",type:"n.m.",cat:"时间"},
+  {fr:"le soir",ph:"[lə swaʁ]",zh:"晚上",type:"n.m.",cat:"时间"},
+  {fr:"la nuit",ph:"[la nɥi]",zh:"夜晚",type:"n.f.",cat:"时间"},
+  {fr:"l'après-midi",ph:"[lapʁɛmidi]",zh:"下午",type:"n.m.",cat:"时间"},
+
+  // 月份
+  {fr:"janvier",ph:"[ʒɑ̃vje]",zh:"一月",type:"n.m.",cat:"月份"},
+  {fr:"février",ph:"[fevʁije]",zh:"二月",type:"n.m.",cat:"月份"},
+  {fr:"mars",ph:"[maʁs]",zh:"三月",type:"n.m.",cat:"月份"},
+  {fr:"avril",ph:"[avʁil]",zh:"四月",type:"n.m.",cat:"月份"},
+  {fr:"mai",ph:"[mɛ]",zh:"五月",type:"n.m.",cat:"月份"},
+  {fr:"juin",ph:"[ʒɥɛ̃]",zh:"六月",type:"n.m.",cat:"月份"},
+  {fr:"juillet",ph:"[ʒɥijɛ]",zh:"七月",type:"n.m.",cat:"月份"},
+  {fr:"août",ph:"[u]",zh:"八月",type:"n.m.",cat:"月份"},
+  {fr:"septembre",ph:"[sɛptɑ̃bʁ]",zh:"九月",type:"n.m.",cat:"月份"},
+  {fr:"octobre",ph:"[ɔktɔbʁ]",zh:"十月",type:"n.m.",cat:"月份"},
+  {fr:"novembre",ph:"[nɔvɑ̃bʁ]",zh:"十一月",type:"n.m.",cat:"月份"},
+  {fr:"décembre",ph:"[desɑ̃bʁ]",zh:"十二月",type:"n.m.",cat:"月份"},
+
+  // 食物
+  {fr:"le pain",ph:"[lə pɛ̃]",zh:"面包",type:"n.m.",cat:"食物"},
+  {fr:"le fromage",ph:"[lə fʁomaʒ]",zh:"奶酪",type:"n.m.",cat:"食物"},
+  {fr:"le vin",ph:"[lə vɛ̃]",zh:"葡萄酒",type:"n.m.",cat:"食物"},
+  {fr:"l'eau",ph:"[lo]",zh:"水",type:"n.f.",cat:"食物"},
+  {fr:"le café",ph:"[lə kafe]",zh:"咖啡",type:"n.m.",cat:"食物"},
+  {fr:"le thé",ph:"[lə te]",zh:"茶",type:"n.m.",cat:"食物"},
+  {fr:"le lait",ph:"[lə lɛ]",zh:"牛奶",type:"n.m.",cat:"食物"},
+  {fr:"la viande",ph:"[la vjɑ̃d]",zh:"肉",type:"n.f.",cat:"食物"},
+  {fr:"le poisson",ph:"[lə pwasɔ̃]",zh:"鱼",type:"n.m.",cat:"食物"},
+  {fr:"le légume",ph:"[lə legym]",zh:"蔬菜",type:"n.m.",cat:"食物"},
+  {fr:"le fruit",ph:"[lə fʁɥi]",zh:"水果",type:"n.m.",cat:"食物"},
+  {fr:"la pomme",ph:"[la pɔm]",zh:"苹果",type:"n.f.",cat:"食物"},
+  {fr:"le gâteau",ph:"[lə gato]",zh:"蛋糕",type:"n.m.",cat:"食物"},
+  {fr:"le repas",ph:"[lə ʁəpa]",zh:"餐饭",type:"n.m.",cat:"食物"},
+
+  // 地点
+  {fr:"la maison",ph:"[la mɛzɔ̃]",zh:"房子 / 家",type:"n.f.",cat:"地点"},
+  {fr:"l'école",ph:"[lekɔl]",zh:"学校",type:"n.f.",cat:"地点"},
+  {fr:"le travail",ph:"[lə tʁavaj]",zh:"工作 / 职场",type:"n.m.",cat:"地点"},
+  {fr:"la rue",ph:"[la ʁy]",zh:"街道",type:"n.f.",cat:"地点"},
+  {fr:"la ville",ph:"[la vil]",zh:"城市",type:"n.f.",cat:"地点"},
+  {fr:"le pays",ph:"[lə pei]",zh:"国家",type:"n.m.",cat:"地点"},
+  {fr:"le restaurant",ph:"[lə ʁɛstoʁɑ̃]",zh:"餐厅",type:"n.m.",cat:"地点"},
+  {fr:"le magasin",ph:"[lə magazɛ̃]",zh:"商店",type:"n.m.",cat:"地点"},
+  {fr:"la gare",ph:"[la gaʁ]",zh:"火车站",type:"n.f.",cat:"地点"},
+  {fr:"l'hôpital",ph:"[lopital]",zh:"医院",type:"n.m.",cat:"地点"},
+  {fr:"le musée",ph:"[lə myze]",zh:"博物馆",type:"n.m.",cat:"地点"},
+  {fr:"la plage",ph:"[la plaʒ]",zh:"海滩",type:"n.f.",cat:"地点"},
+
+  // 常用动词
+  {fr:"être",ph:"[ɛtʁ]",zh:"是；存在",type:"v.",cat:"动词"},
+  {fr:"avoir",ph:"[avwaʁ]",zh:"有；拥有",type:"v.",cat:"动词"},
+  {fr:"aller",ph:"[ale]",zh:"去",type:"v.",cat:"动词"},
+  {fr:"venir",ph:"[vəniʁ]",zh:"来",type:"v.",cat:"动词"},
+  {fr:"faire",ph:"[fɛʁ]",zh:"做；制作",type:"v.",cat:"动词"},
+  {fr:"dire",ph:"[diʁ]",zh:"说",type:"v.",cat:"动词"},
+  {fr:"voir",ph:"[vwaʁ]",zh:"看见",type:"v.",cat:"动词"},
+  {fr:"vouloir",ph:"[vulwaʁ]",zh:"想要",type:"v.",cat:"动词"},
+  {fr:"pouvoir",ph:"[puvwaʁ]",zh:"能够",type:"v.",cat:"动词"},
+  {fr:"parler",ph:"[paʁle]",zh:"说话",type:"v.",cat:"动词"},
+  {fr:"manger",ph:"[mɑ̃ʒe]",zh:"吃",type:"v.",cat:"动词"},
+  {fr:"boire",ph:"[bwaʁ]",zh:"喝",type:"v.",cat:"动词"},
+  {fr:"dormir",ph:"[dɔʁmiʁ]",zh:"睡觉",type:"v.",cat:"动词"},
+  {fr:"travailler",ph:"[tʁavaje]",zh:"工作",type:"v.",cat:"动词"},
+  {fr:"étudier",ph:"[etydje]",zh:"学习",type:"v.",cat:"动词"},
+  {fr:"lire",ph:"[liʁ]",zh:"阅读",type:"v.",cat:"动词"},
+  {fr:"écrire",ph:"[ekʁiʁ]",zh:"写",type:"v.",cat:"动词"},
+  {fr:"prendre",ph:"[pʁɑ̃dʁ]",zh:"拿；乘坐",type:"v.",cat:"动词"},
+  {fr:"donner",ph:"[dɔne]",zh:"给予",type:"v.",cat:"动词"},
+  {fr:"aimer",ph:"[eme]",zh:"爱；喜欢",type:"v.",cat:"动词"},
+  {fr:"habiter",ph:"[abite]",zh:"居住",type:"v.",cat:"动词"},
+  {fr:"s'appeler",ph:"[sapəle]",zh:"叫做",type:"v.",cat:"动词"},
+  {fr:"comprendre",ph:"[kɔ̃pʁɑ̃dʁ]",zh:"理解",type:"v.",cat:"动词"},
+  {fr:"savoir",ph:"[savwaʁ]",zh:"知道；会",type:"v.",cat:"动词"},
+
+  // 形容词
+  {fr:"grand",ph:"[gʁɑ̃]",zh:"大的；高的",type:"adj.",cat:"形容词"},
+  {fr:"petit",ph:"[pəti]",zh:"小的",type:"adj.",cat:"形容词"},
+  {fr:"beau",ph:"[bo]",zh:"美丽的",type:"adj.",cat:"形容词"},
+  {fr:"bon",ph:"[bɔ̃]",zh:"好的",type:"adj.",cat:"形容词"},
+  {fr:"nouveau",ph:"[nuvo]",zh:"新的",type:"adj.",cat:"形容词"},
+  {fr:"vieux",ph:"[vjø]",zh:"老的；旧的",type:"adj.",cat:"形容词"},
+  {fr:"jeune",ph:"[ʒœn]",zh:"年轻的",type:"adj.",cat:"形容词"},
+  {fr:"heureux",ph:"[øʁø]",zh:"幸福的",type:"adj.",cat:"形容词"},
+  {fr:"triste",ph:"[tʁist]",zh:"悲伤的",type:"adj.",cat:"形容词"},
+  {fr:"fatigué",ph:"[fatige]",zh:"疲倦的",type:"adj.",cat:"形容词"},
+  {fr:"chaud",ph:"[ʃo]",zh:"热的",type:"adj.",cat:"形容词"},
+  {fr:"froid",ph:"[fʁwa]",zh:"冷的",type:"adj.",cat:"形容词"},
+  {fr:"facile",ph:"[fasil]",zh:"容易的",type:"adj.",cat:"形容词"},
+  {fr:"difficile",ph:"[difisil]",zh:"困难的",type:"adj.",cat:"形容词"},
+  {fr:"sympa",ph:"[sɛ̃pa]",zh:"友好的",type:"adj.",cat:"形容词"},
+  {fr:"intéressant",ph:"[ɛ̃teʁesɑ̃]",zh:"有趣的",type:"adj.",cat:"形容词"},
+
+  // 交通 & 出行
+  {fr:"le train",ph:"[lə tʁɛ̃]",zh:"火车",type:"n.m.",cat:"交通"},
+  {fr:"le bus",ph:"[lə bys]",zh:"公共汽车",type:"n.m.",cat:"交通"},
+  {fr:"le métro",ph:"[lə metʁo]",zh:"地铁",type:"n.m.",cat:"交通"},
+  {fr:"la voiture",ph:"[la vwatyʁ]",zh:"汽车",type:"n.f.",cat:"交通"},
+  {fr:"le vélo",ph:"[lə velo]",zh:"自行车",type:"n.m.",cat:"交通"},
+  {fr:"l'avion",ph:"[lavjɔ̃]",zh:"飞机",type:"n.m.",cat:"交通"},
+  {fr:"le billet",ph:"[lə bijɛ]",zh:"车票 / 钞票",type:"n.m.",cat:"交通"},
+
+  // 天气
+  {fr:"le soleil",ph:"[lə sɔlɛj]",zh:"太阳",type:"n.m.",cat:"天气"},
+  {fr:"la pluie",ph:"[la plɥi]",zh:"雨",type:"n.f.",cat:"天气"},
+  {fr:"la neige",ph:"[la nɛʒ]",zh:"雪",type:"n.f.",cat:"天气"},
+  {fr:"le vent",ph:"[lə vɑ̃]",zh:"风",type:"n.m.",cat:"天气"},
+  {fr:"le temps",ph:"[lə tɑ̃]",zh:"天气 / 时间",type:"n.m.",cat:"天气"},
+  {fr:"nuageux",ph:"[nɥaʒø]",zh:"多云的",type:"adj.",cat:"天气"},
+
+  // 身体
+  {fr:"la tête",ph:"[la tɛt]",zh:"头",type:"n.f.",cat:"身体"},
+  {fr:"la main",ph:"[la mɛ̃]",zh:"手",type:"n.f.",cat:"身体"},
+  {fr:"le pied",ph:"[lə pje]",zh:"脚",type:"n.m.",cat:"身体"},
+  {fr:"l'œil",ph:"[lœj]",zh:"眼睛",type:"n.m.",cat:"身体"},
+  {fr:"la bouche",ph:"[la buʃ]",zh:"嘴巴",type:"n.f.",cat:"身体"},
+  {fr:"le cœur",ph:"[lə kœʁ]",zh:"心脏",type:"n.m.",cat:"身体"},
+
+  // 职业
+  {fr:"le médecin",ph:"[lə mɛdsɛ̃]",zh:"医生",type:"n.m.",cat:"职业"},
+  {fr:"l'étudiant",ph:"[letydjɑ̃]",zh:"学生",type:"n.m.",cat:"职业"},
+  {fr:"le professeur",ph:"[lə pʁɔfesœʁ]",zh:"教授 / 老师",type:"n.m.",cat:"职业"},
+  {fr:"l'infirmier",ph:"[lɛ̃fiʁmje]",zh:"护士（男）",type:"n.m.",cat:"职业"},
+  {fr:"le cuisinier",ph:"[lə kɥizinje]",zh:"厨师",type:"n.m.",cat:"职业"},
+  {fr:"le policier",ph:"[lə pɔlisje]",zh:"警察",type:"n.m.",cat:"职业"},
+];
+
+// =========================================================
+// STATE
+// =========================================================
+const DAILY_LIMIT = 30;
+const MASTERY_COUNT = 3;
+
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('french_vocab_state');
+    if (raw) return JSON.parse(raw);
+  } catch(e){}
+  return {
+    learnedIds: [],       // word indices mastered (3 correct)
+    progress: {},         // {idx: {correct: n, wrong: n, shown: n}}
+    todayIds: [],         // today's 30 word indices
+    todayLearnedIds: [],  // mastered today
+    dayCorrect: 0,
+    dayWrong: 0,
+    lastDate: null
+  };
+}
+
+function saveState() {
+  try { localStorage.setItem('french_vocab_state', JSON.stringify(state)); } catch(e){}
+}
+
+function getTodayStr() {
+  return new Date().toISOString().slice(0,10);
+}
+
+// Init / day change
+function initDay() {
+  const today = getTodayStr();
+  if (state.lastDate !== today) {
+    // New day — pick 30 new unlearned words
+    state.lastDate = today;
+    state.dayCorrect = 0;
+    state.dayWrong = 0;
+    state.todayLearnedIds = [];
+    pickTodayWords();
+    saveState();
+  }
+}
+
+function pickTodayWords() {
+  const unlearnedIdxs = ALL_WORDS
+    .map((_,i) => i)
+    .filter(i => !state.learnedIds.includes(i));
+
+  shuffle(unlearnedIdxs);
+  state.todayIds = unlearnedIdxs.slice(0, DAILY_LIMIT);
+  // Reset progress for today's words
+  state.todayIds.forEach(i => {
+    if (!state.progress[i]) state.progress[i] = {correct:0, wrong:0, shown:0};
+  });
+}
+
+// =========================================================
+// QUIZ LOGIC
+// =========================================================
+let currentQueue = [];   // ordered list of idxs to show today
+let currentIdx = null;
+let answered = false;
+let correctAnswer = null;
+
+function buildQueue() {
+  // Among today's unlearned words, pick ones that still need to be shown
+  const needed = state.todayIds.filter(i =>
+    !state.learnedIds.includes(i) && !state.todayLearnedIds.includes(i)
+  );
+  shuffle(needed);
+  currentQueue = needed;
+}
+
+function startQuiz() {
+  buildQueue();
+  if (currentQueue.length === 0) {
+    showDoneScreen();
+    return;
+  }
+  showNextWord();
+}
+
+function showNextWord() {
+  buildQueue();
+  if (currentQueue.length === 0) {
+    showDoneScreen();
+    return;
+  }
+  currentIdx = currentQueue[0];
+  answered = false;
+  renderWord();
+  updateStats();
+  updateProgress();
+}
+
+function renderWord() {
+  const w = ALL_WORDS[currentIdx];
+  const p = state.progress[currentIdx] || {correct:0, wrong:0, shown:0};
+
+  // Card
+  document.getElementById('fr-word').textContent = w.fr;
+  document.getElementById('ph-word').textContent = w.ph;
+  document.getElementById('type-tag').textContent = w.type;
+  document.getElementById('cat-tag').textContent = w.cat;
+
+  const needed = MASTERY_COUNT - (p.correct || 0);
+  const attempt = (p.shown || 0) + 1;
+  document.getElementById('attempt-badge').textContent = `第 ${attempt} 次`;
+
+  // Dots
+  const dotsEl = document.getElementById('attempt-dots');
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < MASTERY_COUNT; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < (p.correct||0) ? ' correct' : '');
+    dotsEl.appendChild(d);
+  }
+
+  // Options
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  const wrongPool = ALL_WORDS.filter((_,i) => i !== currentIdx);
+  shuffle(wrongPool);
+  const distractors = wrongPool.slice(0, 3).map(x => x.zh);
+  const choices = [w.zh, ...distractors];
+  shuffle(choices);
+  correctAnswer = w.zh;
+
+  const labels = ['A','B','C','D'];
+  choices.forEach((ch, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-label">${labels[i]}</span>${ch}`;
+    btn.onclick = () => handleAnswer(btn, ch);
+    grid.appendChild(btn);
+  });
+
+  // Reset UI
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback-strip';
+  fb.textContent = '';
+  document.getElementById('dont-know-btn').disabled = false;
+  document.getElementById('next-btn').classList.remove('visible');
+
+  // Animate in
+  const card = document.getElementById('word-card');
+  card.classList.remove('flip-out');
+  card.classList.add('flip-in');
+  setTimeout(() => card.classList.remove('flip-in'), 400);
+}
+
+function handleAnswer(btn, choice) {
+  if (answered) return;
+  answered = true;
+  document.getElementById('dont-know-btn').disabled = true;
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+  const p = state.progress[currentIdx];
+  p.shown = (p.shown || 0) + 1;
+
+  const isCorrect = choice === correctAnswer;
+  const fb = document.getElementById('feedback');
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    p.correct = (p.correct || 0) + 1;
+    state.dayCorrect++;
+    fb.textContent = `✓ 正确！${ALL_WORDS[currentIdx].fr} = ${correctAnswer}`;
+    fb.className = 'feedback-strip show ok';
+
+    // Update dots
+    const dots = document.querySelectorAll('.dot');
+    const correctCount = p.correct;
+    dots.forEach((d, i) => { if(i < correctCount) d.classList.add('correct'); });
+
+    // Check mastery
+    if (p.correct >= MASTERY_COUNT) {
+      if (!state.learnedIds.includes(currentIdx)) {
+        state.learnedIds.push(currentIdx);
+        state.todayLearnedIds.push(currentIdx);
+      }
+      fb.textContent += `  🌟 已掌握！`;
+    }
+  } else {
+    btn.classList.add('wrong');
+    p.wrong = (p.wrong || 0) + 1;
+    state.dayWrong++;
+    fb.textContent = `✗ 答错了！正确答案是：${correctAnswer}`;
+    fb.className = 'feedback-strip show fail';
+    // Show correct
+    document.querySelectorAll('.option-btn').forEach(b => {
+      if (b.textContent.includes(correctAnswer)) b.classList.add('correct');
+    });
+  }
+
+  saveState();
+  updateStats();
+  document.getElementById('next-btn').classList.add('visible');
+}
+
+function handleDontKnow() {
+  if (answered) return;
+  answered = true;
+  document.getElementById('dont-know-btn').disabled = true;
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+  const p = state.progress[currentIdx];
+  p.shown = (p.shown || 0) + 1;
+  p.wrong = (p.wrong || 0) + 1;
+  state.dayWrong++;
+
+  const fb = document.getElementById('feedback');
+  fb.textContent = `正确答案是：${correctAnswer}`;
+  fb.className = 'feedback-strip show fail';
+  document.querySelectorAll('.option-btn').forEach(b => {
+    if (b.textContent.includes(correctAnswer)) b.classList.add('correct');
+  });
+
+  saveState();
+  updateStats();
+  document.getElementById('next-btn').classList.add('visible');
+}
+
+function nextWord() {
+  const card = document.getElementById('word-card');
+  card.classList.add('flip-out');
+  setTimeout(() => showNextWord(), 280);
+}
+
+// =========================================================
+// SCREENS
+// =========================================================
+function showDoneScreen() {
+  document.getElementById('quiz-screen').style.display = 'none';
+
+  const total = state.dayCorrect + state.dayWrong;
+  const rate = total > 0 ? Math.round(state.dayCorrect / total * 100) : 0;
+
+  if (state.learnedIds.length >= ALL_WORDS.length) {
+    // All mastered!
+    showAllDone();
+    return;
+  }
+
+  document.getElementById('done-screen').classList.add('active');
+  document.getElementById('done-today').textContent = state.todayIds.length;
+  document.getElementById('done-rate').textContent = `${state.dayCorrect}题 / ${total}题`;
+  document.getElementById('done-pct').textContent = rate + '%';
+  document.getElementById('done-learned').textContent = state.learnedIds.length;
+  document.getElementById('done-total').textContent = ALL_WORDS.length;
+
+  const list = document.getElementById('today-learned-list');
+  list.innerHTML = '';
+  if (state.todayLearnedIds.length === 0) {
+    list.innerHTML = '<div class="learned-item"><span style="color:#aaa">今天暂未掌握新单词</span></div>';
+  } else {
+    state.todayLearnedIds.forEach(i => {
+      const w = ALL_WORDS[i];
+      list.innerHTML += `<div class="learned-item"><span class="learned-fr">${w.fr}</span><span class="learned-zh">${w.zh}</span></div>`;
+    });
+  }
+}
+
+function showAllDone() {
+  document.getElementById('alldone-screen').classList.add('active');
+  document.getElementById('all-total').textContent = ALL_WORDS.length;
+  const list = document.getElementById('all-learned-list');
+  list.innerHTML = '';
+  state.learnedIds.forEach(i => {
+    const w = ALL_WORDS[i];
+    list.innerHTML += `<div class="learned-item"><span class="learned-fr">${w.fr}</span><span class="learned-zh">${w.zh}</span></div>`;
+  });
+}
+
+function startNewDay() {
+  state.lastDate = null; // force new day
+  document.getElementById('done-screen').classList.remove('active');
+  document.getElementById('quiz-screen').style.display = '';
+  initDay();
+  startQuiz();
+}
+
+function resetAll() {
+  localStorage.removeItem('french_vocab_state');
+  state = loadState();
+  document.getElementById('alldone-screen').classList.remove('active');
+  document.getElementById('quiz-screen').style.display = '';
+  initDay();
+  startQuiz();
+}
+
+// =========================================================
+// UI HELPERS
+// =========================================================
+function updateStats() {
+  document.getElementById('stat-today').textContent = state.todayIds.length;
+  document.getElementById('stat-correct').textContent = state.dayCorrect;
+  document.getElementById('stat-wrong').textContent = state.dayWrong;
+  document.getElementById('stat-learned').textContent = state.learnedIds.length;
+  document.getElementById('stat-total').textContent = ALL_WORDS.length;
+}
+
+function updateProgress() {
+  const done = state.todayLearnedIds.length;
+  const total = state.todayIds.length;
+  const pct = total > 0 ? Math.round(done/total*100) : 0;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-label').textContent = `今日已掌握 ${done}/${total}`;
+}
+
+function shuffle(arr) {
+  for (let i = arr.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// =========================================================
+// BOOT
+// =========================================================
+initDay();
+startQuiz();
+updateStats();
+updateProgress();
+</script>
+</body>
+</html>
